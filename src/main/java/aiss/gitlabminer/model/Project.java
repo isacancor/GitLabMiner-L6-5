@@ -1,5 +1,5 @@
 
-package aiss.gitminer.model;
+package aiss.gitlabminer.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

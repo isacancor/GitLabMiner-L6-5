@@ -1,3 +1,3 @@
-# GitMiner-L6-5
- GitMiner - Mining tool for Git project platforms
+# GitLabMiner-L6-5
+ GitLabMiner - GitLab consumer service
 
