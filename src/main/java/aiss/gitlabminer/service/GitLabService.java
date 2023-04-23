@@ -4,6 +4,7 @@ import aiss.gitlabminer.model.Comment;
 import aiss.gitlabminer.model.Commit;
 import aiss.gitlabminer.model.Issue;
 import aiss.gitlabminer.model.Project;
+import aiss.gitlabminer.utils.Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -75,16 +76,7 @@ public class GitLabService {
         return newProject;
     }
 
-    public String getNextPageUrl(HttpHeaders headers) {
-        if (headers.getFirst("X-Next-Page").equals("")) {
-            return null;
-        }
 
-        return headers.getFirst(HttpHeaders.LINK)
-                .split(";")[0]
-                .replaceAll("<|>", "")
-                .replaceAll(" rel=\"next\"", "");
-    }
 
     // ----------------------------------------------------------------------------------------------------
     // Projects
@@ -131,14 +123,14 @@ public class GitLabService {
             ResponseEntity<Commit[]> response = getCommitsRE(uri);
             List<Commit> pageCommits = Arrays.stream(response.getBody()).toList();
             commits.addAll(pageCommits);
-            String nextPageURL = getNextPageUrl(response.getHeaders());
+            String nextPageURL = Util.getNextPageUrl(response.getHeaders());
             int page = 2;
 
             while (nextPageURL != null && page <= maxPages) {
                 response = getCommitsRE(nextPageURL);
                 pageCommits = Arrays.stream(response.getBody()).toList();
                 commits.addAll(pageCommits);
-                nextPageURL = getNextPageUrl(response.getHeaders());
+                nextPageURL = Util.getNextPageUrl(response.getHeaders());
                 page++;
             }
         }
@@ -172,7 +164,7 @@ public class GitLabService {
             ResponseEntity<Issue[]> response = getIssuesRE(uri);
             List<Issue> pageIssues = Arrays.stream(response.getBody()).toList();
             issues.addAll(pageIssues);
-            String nextPageURL = getNextPageUrl(response.getHeaders());
+            String nextPageURL = Util.getNextPageUrl(response.getHeaders());
             int page = 2;
 
             while(nextPageURL != null && page <= maxPages){
@@ -180,7 +172,7 @@ public class GitLabService {
                 pageIssues = Arrays.stream(response.getBody()).toList();
                 issues.addAll(pageIssues);
 
-                nextPageURL = getNextPageUrl(response.getHeaders());
+                nextPageURL = Util.getNextPageUrl(response.getHeaders());
                 page++;
             }
         }
