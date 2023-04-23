@@ -44,6 +44,8 @@ class GitLabServiceTest {
         assertEquals(project.getId(), id, "The id doesn't match");
         assertEquals(project.getName(), "graphviz", "The name doesn't match");
         assertEquals(project.getWebUrl(),  "https://gitlab.com/graphviz/graphviz", "The web doesn't match");
+
+        project.prettyPrint();
     }
 
     // ----------------------------------------------------------------------------------------------------
@@ -93,8 +95,8 @@ class GitLabServiceTest {
         assertTrue(issues.stream().allMatch(i->!i.getAuthor().equals(null)));
         assertTrue(issues.stream().allMatch(i->i.getState().equals("closed") ? !i.getClosedAt().equals(null) : true));
 
-        System.out.println(issues);
-        System.out.println(issues.size());
+        //System.out.println(issues);
+        //System.out.println(issues.size());
     }
 
     // ----------------------------------------------------------------------------------------------------
@@ -103,8 +105,9 @@ class GitLabServiceTest {
     @DisplayName("Get Comments")
     void getComments(){
         String projectId = "4207231";
-        String issueIID = "2374";
-        List<Comment> comments = service.getComments(projectId, issueIID);
+        String issueIID = "1219";
+        int maxPages = 2;
+        List<Comment> comments = service.getComments(projectId, issueIID, maxPages);
 
         assertNotNull(comments, "The list of comments is null");
         assertTrue(comments.stream().allMatch(c->!c.getId().equals(null)));
@@ -112,8 +115,8 @@ class GitLabServiceTest {
         assertTrue(comments.stream().allMatch(c->!c.getAuthor().equals(null)));
         assertTrue(comments.stream().allMatch(c->!c.getCreatedAt().equals(null)));
 
-        //System.out.println(comments.size());
-        //System.out.println(comments);
+        System.out.println(comments.size());
+        System.out.println(comments);
     }
 
 

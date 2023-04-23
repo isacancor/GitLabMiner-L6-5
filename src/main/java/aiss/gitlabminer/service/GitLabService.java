@@ -179,7 +179,7 @@ public class GitLabService {
 
         for (Issue issue: issues) {
             issue.setRefId(issue.getIid());
-            issue.setComments(getComments(projectId, issue.getIid()));
+            issue.setComments(getComments(projectId, issue.getRefId(), maxPages));
         }
 
         return issues;
@@ -191,10 +191,10 @@ public class GitLabService {
         Comments. Implementará, como mínimo, varias operaciones de lectura para listar todos
         los comentarios y buscar comentarios por id.
     */
-    public List<Comment> getComments(String projectId, String issueIID){
+    public List<Comment> getComments2(String projectId, String issueIID){
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + token);
-        HttpEntity<Project[]> request = new HttpEntity<>(null, headers);
+        HttpEntity<Comment[]> request = new HttpEntity<>(null, headers);
 
         String uri = baseUri + projectId + "/issues/" + issueIID + "/notes";
 
@@ -202,6 +202,44 @@ public class GitLabService {
                 .exchange(uri, HttpMethod.GET, request, Comment[].class);
 
         return Arrays.stream(comments.getBody()).toList();
+    }
+
+    public ResponseEntity<Comment[]> getCommentRE(String uri){
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + token);
+        HttpEntity<Comment[]> request = new HttpEntity<>(null, headers);
+
+        ResponseEntity<Comment[]> response = restTemplate
+                .exchange(uri, HttpMethod.GET, request, Comment[].class);
+
+        return response;
+    }
+
+    public List<Comment> getComments(String projectId, String issueIID, int maxPages)
+            throws HttpClientErrorException {
+        List<Comment> comments = new ArrayList<>();
+
+        if (maxPages > 0) {
+            String uri = baseUri + projectId + "/issues/" + issueIID + "/notes";
+
+            // Pagination
+            ResponseEntity<Comment[]> response = getCommentRE(uri);
+            List<Comment> pageComments = Arrays.stream(response.getBody()).toList();
+            comments.addAll(pageComments);
+            String nextPageURL = Util.getNextPageUrl(response.getHeaders());
+            int page = 2;
+
+            while(nextPageURL != null && page <= maxPages){
+                response = getCommentRE(nextPageURL);
+                pageComments = Arrays.stream(response.getBody()).toList();
+                comments.addAll(pageComments);
+
+                nextPageURL = Util.getNextPageUrl(response.getHeaders());
+                page++;
+            }
+        }
+
+        return comments;
     }
 
 }
