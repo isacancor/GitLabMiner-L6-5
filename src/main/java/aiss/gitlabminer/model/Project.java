@@ -103,4 +103,16 @@ public class Project {
         }
         return sb.toString();
     }
+
+    // -------------------------------------------------------------------------------
+    public void prettyPrint(){
+        System.out.println("Id: " + this.getId());
+        System.out.println("Name: " + this.getName());
+        System.out.println("Web Url: " + this.getWebUrl());
+        System.out.println("Commits:");
+        this.getCommits().forEach(c-> System.out.println("[Id=" + c.getId() + ", Title=" + c.getTitle() + ", Author=" + c.getAuthorName() + "]"));
+        System.out.println("-----------------------------------------------------------------");
+        System.out.println("Issues:");
+        this.getIssues().forEach(i-> System.out.println("[Id=" + i.getId() + ", Title=" + i.getTitle() + ", Author=" + i.getAuthor() + "]"));
+    }
 }
