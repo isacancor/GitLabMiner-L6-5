@@ -11,7 +11,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.List;
 
 @RestController
-@RequestMapping("/gitlabminer/")
+@RequestMapping("/gitlab")
 public class GitLabController {
 
     @Autowired
@@ -21,14 +21,25 @@ public class GitLabController {
     RestTemplate restTemplate;
 
     // GET /gitlabminer/{id}[?sinceCommits=5&sinceIssues=30&maxPages=2]
-    @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/{id}/")
+    @GetMapping("/{id}")
     public Project getProject(@PathVariable String id,
                               @RequestParam int sinceCommits, @RequestParam int sinceIssues,
                               @RequestParam int maxPages) {
         Project res = service.genProject(id, sinceCommits, sinceIssues,maxPages);
+        return res;
+    }
 
-        ResponseEntity<Project> response = restTemplate.postForEntity("http://localhost:8080/gitminer/projects",res,Project.class);
+    // POST /gitlabminer/{id}[?sinceCommits=5&sinceIssues=30&maxPages=2]
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping("/{id}")
+    public Project sendProject(@PathVariable String id,
+                              @RequestParam int sinceCommits, @RequestParam int sinceIssues,
+                              @RequestParam int maxPages) {
+        String uri = "http://localhost:8080/gitminer/projects";
+        Project res = service.genProject(id, sinceCommits, sinceIssues,maxPages);
+
+        ResponseEntity<Project> response = restTemplate
+                .postForEntity(uri, res, Project.class);
 
         return response.getBody();
     }

@@ -1,9 +1,6 @@
 package aiss.gitlabminer.service;
 
-import aiss.gitlabminer.model.Comment;
-import aiss.gitlabminer.model.Commit;
-import aiss.gitlabminer.model.Issue;
-import aiss.gitlabminer.model.Project;
+import aiss.gitlabminer.model.*;
 import aiss.gitlabminer.utils.Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -140,19 +137,19 @@ public class GitLabService {
 
     // ----------------------------------------------------------------------------------------------------
     // Issues
-    public ResponseEntity<Issue[]> getIssuesRE(String uri){
+    public ResponseEntity<Issue2[]> getIssuesRE(String uri){
         HttpHeaders headers = new HttpHeaders();
-        HttpEntity<Issue[]> request = new HttpEntity<>(null, headers);
+        HttpEntity<Issue2[]> request = new HttpEntity<>(null, headers);
 
-        ResponseEntity<Issue[]> response = restTemplate
-                .exchange(uri, HttpMethod.GET, request, Issue[].class);
+        ResponseEntity<Issue2[]> response = restTemplate
+                .exchange(uri, HttpMethod.GET, request, Issue2[].class);
 
         return response;
     }
 
     public List<Issue> getIssues(String projectId, int sinceDays, int maxPages)
             throws HttpClientErrorException {
-        List<Issue> issues = new ArrayList<>();
+        List<Issue2> issues = new ArrayList<>();
 
         if (maxPages > 0) {
             // Since X Days
@@ -161,8 +158,8 @@ public class GitLabService {
                     +sinceDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssZ"));
 
             // Pagination
-            ResponseEntity<Issue[]> response = getIssuesRE(uri);
-            List<Issue> pageIssues = Arrays.stream(response.getBody()).toList();
+            ResponseEntity<Issue2[]> response = getIssuesRE(uri);
+            List<Issue2> pageIssues = Arrays.stream(response.getBody()).toList();
             issues.addAll(pageIssues);
             String nextPageURL = Util.getNextPageUrl(response.getHeaders());
             int page = 2;
@@ -177,12 +174,15 @@ public class GitLabService {
             }
         }
 
-        for (Issue issue: issues) {
-            issue.setRefId(issue.getIid());
-            issue.setComments(getComments(projectId, issue.getRefId(), maxPages));
+        List<Issue> res = new ArrayList<>();
+
+        for (Issue2 issue: issues) {
+            Issue newIssue = Util.parseIssue(issue);
+            newIssue.setComments(getComments(projectId, newIssue.getRefId(), maxPages));
+            res.add(newIssue);
         }
 
-        return issues;
+        return res;
     }
 
     // ----------------------------------------------------------------------------------------------------

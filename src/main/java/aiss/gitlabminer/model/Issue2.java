@@ -4,23 +4,20 @@ package aiss.gitlabminer.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import javax.annotation.Generated;
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Entity
 @Table(name = "Issue")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Issue {
+public class Issue2 {
 
     @Id
     @JsonProperty("id")
     private String id;
 
-    @JsonProperty("ref_id")
-    private String refId;
+    @JsonProperty("iid")
+    private String iid;
     @JsonProperty("title")
     private String title;
     @JsonProperty("description")
@@ -68,12 +65,12 @@ public class Issue {
         this.id = id;
     }
 
-    public String getRefId() {
-        return refId;
+    public String getIid() {
+        return iid;
     }
 
-    public void setRefId(String refId) {
-        this.refId = refId;
+    public void setIid(String iid) {
+        this.iid = iid;
     }
 
     public String getTitle() {
@@ -183,14 +180,14 @@ public class Issue {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(Issue.class.getName()).append('@').append(Integer.toHexString(System.identityHashCode(this))).append('[');
+        sb.append(Issue2.class.getName()).append('@').append(Integer.toHexString(System.identityHashCode(this))).append('[');
         sb.append("id");
         sb.append('=');
         sb.append(((this.id == null) ? "<null>" : this.id));
         sb.append(',');
         sb.append("refId");
         sb.append('=');
-        sb.append(((this.refId == null) ? "<null>" : this.refId));
+        sb.append(((this.iid == null) ? "<null>" : this.iid));
         sb.append(',');
         sb.append("title");
         sb.append('=');
