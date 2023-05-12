@@ -6,6 +6,9 @@ import aiss.gitlabminer.model.Issue;
 import aiss.gitlabminer.model.Project;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -79,10 +82,18 @@ public class ProjectService {
     */
 
     public Project getProjectById(String id) throws ProjectNotFoundException {
+        HttpHeaders headers = new HttpHeaders();
+        if (token != "") {
+            headers.set("Authorization", "Bearer " + token);
+        }
+
+        HttpEntity<Project[]> request = new HttpEntity<>(null, headers);
+
         String uri = baseUri + id;
         Project project;
         try {
-            project = restTemplate.getForObject(uri, Project.class);
+            project = restTemplate
+                    .exchange(uri, HttpMethod.GET, request, Project.class).getBody();
         } catch (Exception e) {
             throw new ProjectNotFoundException();
         }

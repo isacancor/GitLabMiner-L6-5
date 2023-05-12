@@ -28,7 +28,7 @@ class CommitServiceTest {
         Integer maxPages = 5;
         List<Commit> commits = service.getCommits(projectId, sinceCommits, maxPages);
 
-        assertTrue(commits.size() <= 20*maxPages, "There are more pages than specified");
+        assertTrue(commits.size() <= 20*maxPages, "There are more commit pages than specified");
         assertNotNull(commits, "The list of commits is null");
         assertTrue(commits.stream().allMatch(c->!c.getId().equals(null)));
         assertTrue(commits.stream().allMatch(c->!c.getTitle().equals(null)));
@@ -41,8 +41,7 @@ class CommitServiceTest {
         assertTrue(commits.stream().allMatch(c->!c.getCommittedDate().equals(null)));
         assertTrue(commits.stream().allMatch(c->!c.getWebUrl().equals(null)));
 
-        // System.out.println(commits.size());
+        System.out.println(commits.size());
     }
-
 
 }

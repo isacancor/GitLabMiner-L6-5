@@ -33,9 +33,9 @@ class CommentServiceTest {
         assertTrue(comments.stream().allMatch(c->!c.getBody().equals(null)));
         assertTrue(comments.stream().allMatch(c->!c.getAuthor().equals(null)));
         assertTrue(comments.stream().allMatch(c->!c.getCreatedAt().equals(null)));
+        assertTrue(comments.size() <= 20*maxPages, "There are more comment pages than specified");
 
         System.out.println(comments.size());
-        System.out.println(comments);
     }
 
 

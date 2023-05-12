@@ -28,7 +28,7 @@ class IssueServiceTest {
         Integer maxPages = 1;
         List<Issue> issues = service.getIssues(projectId, sinceIssues, maxPages);
 
-        assertTrue(issues.size() <= 20*maxPages, "There are more pages than specified");
+        assertTrue(issues.size() <= 20*maxPages, "There are more issue pages than specified");
         assertNotNull(issues, "The list of issues is null");
         assertTrue(issues.stream().allMatch(i->!i.getId().equals(null)));
         assertTrue(issues.stream().allMatch(i->!i.getRefId().equals(null)));
@@ -38,9 +38,9 @@ class IssueServiceTest {
         assertTrue(issues.stream().allMatch(i->!i.getCreatedAt().equals(null)));
         assertTrue(issues.stream().allMatch(i->!i.getAuthor().equals(null)));
         assertTrue(issues.stream().allMatch(i->i.getState().equals("closed") ? !i.getClosedAt().equals(null) : true));
+        assertTrue(issues.stream().allMatch(i->i.getComments().size() <= 20*maxPages), "There are more comment pages than specified");
 
-        //System.out.println(issues);
-        //System.out.println(issues.size());
+        System.out.println(issues.size());
     }
 
 }

@@ -30,15 +30,6 @@ public class CommitService {
     @Value("${gitlabminer.token}")
     private String token;
 
-    @Value("${gitminer.sincecommits}")
-    private int sinceCommitsDefault;
-
-    @Value("${gitminer.sinceissues}")
-    private int sinceIssuesDefault;
-
-    @Value("${gitminer.maxpages}")
-    private int maxPagesDefault;
-
     // Commits
     /*
         Commits. Implementará, como mínimo, varias operaciones de lectura para listar todos los
@@ -47,6 +38,10 @@ public class CommitService {
 
     public ResponseEntity<Commit[]> getCommitsRE(String uri) {
         HttpHeaders headers = new HttpHeaders();
+        if(token != "") {
+            headers.set("Authorization", "Bearer " + token);
+        }
+
         HttpEntity<Commit[]> request = new HttpEntity<>(null, headers);
 
         ResponseEntity<Commit[]> response = restTemplate

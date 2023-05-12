@@ -34,18 +34,13 @@ public class IssueService {
     @Value("${gitlabminer.token}")
     private String token;
 
-    @Value("${gitminer.sincecommits}")
-    private int sinceCommitsDefault;
-
-    @Value("${gitminer.sinceissues}")
-    private int sinceIssuesDefault;
-
-    @Value("${gitminer.maxpages}")
-    private int maxPagesDefault;
-
     // Issues
     public ResponseEntity<Issue2[]> getIssuesRE(String uri){
         HttpHeaders headers = new HttpHeaders();
+        if(token != "") {
+            headers.set("Authorization", "Bearer " + token);
+        }
+
         HttpEntity<Issue2[]> request = new HttpEntity<>(null, headers);
 
         ResponseEntity<Issue2[]> response = restTemplate
