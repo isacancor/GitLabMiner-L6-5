@@ -1,5 +1,6 @@
 package aiss.gitlabminer.controller;
 
+import aiss.gitlabminer.exception.ProjectNotFoundException;
 import aiss.gitlabminer.model.Project;
 import aiss.gitlabminer.service.ProjectService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -37,13 +38,14 @@ public class GitLabController {
                     content = {@Content(schema = @Schema(implementation = Project.class), mediaType = "application/json")}),
             @ApiResponse(responseCode = "404",
                     description = "Project not found",
-                    content = {@Content(schema = @Schema())}),
+                    content = {@Content(schema = @Schema())})
     })
     @GetMapping("/{id}")
     public Project getProject(@Parameter(description = "id of the project to be searched") @PathVariable String id,
                               @Parameter(description = "number of past days to search for commits") @RequestParam int sinceCommits,
                               @Parameter(description = "number of past days to search for issues") @RequestParam int sinceIssues,
-                              @Parameter(description = "max number of pages to search") @RequestParam int maxPages) {
+                              @Parameter(description = "max number of pages to search") @RequestParam int maxPages)
+            throws ProjectNotFoundException {
         Project res = service.genProject(id, sinceCommits, sinceIssues,maxPages);
         return res;
     }
@@ -60,13 +62,17 @@ public class GitLabController {
             @ApiResponse(responseCode = "400",
                     description = "Project could not be sent",
                     content = {@Content(schema = @Schema())}),
+            @ApiResponse(responseCode = "404",
+                    description = "Project not found",
+                    content = {@Content(schema = @Schema())})
     })
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/{id}")
     public Project sendProject(@Parameter(description = "id of the project to be searched") @PathVariable String id,
                                @Parameter(description = "number of past days to search for commits") @RequestParam int sinceCommits,
                                @Parameter(description = "number of past days to search for issues") @RequestParam int sinceIssues,
-                               @Parameter(description = "max number of pages to search") @RequestParam int maxPages) {
+                               @Parameter(description = "max number of pages to search") @RequestParam int maxPages)
+            throws ProjectNotFoundException {
         String uri = "http://localhost:8080/gitminer/projects";
         Project res = service.genProject(id, sinceCommits, sinceIssues,maxPages);
 

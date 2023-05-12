@@ -1,5 +1,6 @@
 package aiss.gitlabminer.service;
 
+import aiss.gitlabminer.exception.ProjectNotFoundException;
 import aiss.gitlabminer.model.Comment;
 import aiss.gitlabminer.model.Commit;
 import aiss.gitlabminer.model.Issue;
@@ -21,7 +22,7 @@ class ProjectServiceTest {
 
     @Test
     @DisplayName("Generate Project")
-    void genProject(){
+    void genProject() throws ProjectNotFoundException {
         String id = "4207231";
         Project project = service.genProject(id,10,2,0);
         assertEquals(project.getId(), id, "The id doesn't match");
@@ -38,7 +39,7 @@ class ProjectServiceTest {
 
     @Test
     @DisplayName("Get Project By Id")
-    void getProjectById() {
+    void getProjectById() throws ProjectNotFoundException {
         String id = "4207231";
         Project project = service.getProjectById(id);
         assertEquals(project.getId(), id, "The id doesn't match");

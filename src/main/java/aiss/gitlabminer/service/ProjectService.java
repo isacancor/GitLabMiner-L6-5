@@ -1,5 +1,6 @@
 package aiss.gitlabminer.service;
 
+import aiss.gitlabminer.exception.ProjectNotFoundException;
 import aiss.gitlabminer.model.Commit;
 import aiss.gitlabminer.model.Issue;
 import aiss.gitlabminer.model.Project;
@@ -45,7 +46,7 @@ public class ProjectService {
             por defecto: 2.
     */
 
-    public Project genProject(String projectId, int sinceCommits, int sinceIssues, int maxPages) {
+    public Project genProject(String projectId, int sinceCommits, int sinceIssues, int maxPages) throws ProjectNotFoundException {
         Project newProject = getProjectById(projectId);
         if(maxPages <= 0){
             maxPages = maxPagesDefault;
@@ -77,9 +78,15 @@ public class ProjectService {
         adaptadores puedan añadir datos de nuevos proyectos.
     */
 
-    public Project getProjectById(String id){
+    public Project getProjectById(String id) throws ProjectNotFoundException {
         String uri = baseUri + id;
-        Project project = restTemplate.getForObject(uri, Project.class);
+        Project project;
+        try {
+            project = restTemplate.getForObject(uri, Project.class);
+        } catch (Exception e) {
+            throw new ProjectNotFoundException();
+        }
+
         return project;
     }
 
