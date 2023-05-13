@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -42,9 +43,12 @@ public class GitLabController {
     })
     @GetMapping("/{id}")
     public Project getProject(@Parameter(description = "id of the project to be searched") @PathVariable String id,
-                              @Parameter(description = "number of past days to search for commits") @RequestParam int sinceCommits,
-                              @Parameter(description = "number of past days to search for issues") @RequestParam int sinceIssues,
-                              @Parameter(description = "max number of pages to search") @RequestParam int maxPages)
+                              @Parameter(description = "number of past days to search for commits")
+                              @RequestParam(required=false) int sinceCommits,
+                              @Parameter(description = "number of past days to search for issues")
+                                  @RequestParam(required=false) int sinceIssues,
+                              @Parameter(description = "max number of pages to search")
+                                  @RequestParam(required=false) int maxPages)
             throws ProjectNotFoundException {
         Project res = service.genProject(id, sinceCommits, sinceIssues,maxPages);
         return res;
@@ -69,9 +73,12 @@ public class GitLabController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/{id}")
     public Project sendProject(@Parameter(description = "id of the project to be searched") @PathVariable String id,
-                               @Parameter(description = "number of past days to search for commits") @RequestParam int sinceCommits,
-                               @Parameter(description = "number of past days to search for issues") @RequestParam int sinceIssues,
-                               @Parameter(description = "max number of pages to search") @RequestParam int maxPages)
+                               @Parameter(description = "number of past days to search for commits")
+                               @RequestParam(required=false) int sinceCommits,
+                               @Parameter(description = "number of past days to search for issues")
+                                   @RequestParam(required=false) int sinceIssues,
+                               @Parameter(description = "max number of pages to search")
+                                   @RequestParam(required=false) int maxPages)
             throws ProjectNotFoundException {
         String uri = "http://localhost:8080/gitminer/projects";
         Project res = service.genProject(id, sinceCommits, sinceIssues,maxPages);
