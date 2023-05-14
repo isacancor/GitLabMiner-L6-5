@@ -39,6 +39,12 @@ class ProjectServiceTest {
         assertTrue(project.getIssues().stream().allMatch(i->i.getComments().size() <= 20*maxPages), "There are more comment pages than specified");
 
         project.prettyPrint();
+
+        try {
+            Project project2 = service.genProject("999999999999999999999999", sinceCommits, sinceIssues, maxPages);
+        } catch (Exception e) {
+            assertTrue(e.getClass().equals(ProjectNotFoundException.class), "ProjectNotFoundException not thrown");
+        }
     }
 
     @Test
@@ -55,6 +61,12 @@ class ProjectServiceTest {
         assertTrue(project.getIssues().isEmpty(), "The list of issues is not empty");
 
         project.prettyPrint();
+
+        try {
+            Project project2 = service.getProjectById("999999999999999999999999");
+        } catch (Exception e) {
+            assertTrue(e.getClass().equals(ProjectNotFoundException.class), "ProjectNotFoundException not thrown");
+        }
     }
 
 }
