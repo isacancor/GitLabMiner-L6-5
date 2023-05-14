@@ -49,20 +49,21 @@ public class ProjectService {
             por defecto: 2.
     */
 
-    public Project genProject(String projectId, int sinceCommits, int sinceIssues, int maxPages) throws ProjectNotFoundException {
+    public Project genProject(String projectId, Integer sinceCommits, Integer sinceIssues, Integer maxPages) throws ProjectNotFoundException {
         Project newProject = getProjectById(projectId);
-        if(maxPages <= 0){
+
+        if(maxPages == null || maxPages <= 0){
             maxPages = maxPagesDefault;
         }
 
         // Calculate date and time to retrieve commits from based on the number of input days
-        if (sinceCommits <= 0) {
+        if (sinceCommits == null || sinceCommits <= 0) {
             sinceCommits = sinceCommitsDefault;
         }
         List<Commit> commits = commitService.getCommits(projectId, sinceCommits, maxPages);
 
         // Calculate date and time to retrieve issues from based on the number of input days
-        if (sinceIssues <= 0) {
+        if (sinceIssues == null || sinceIssues <= 0) {
             sinceIssues = sinceIssuesDefault;
         }
         List<Issue> issues = issueService.getIssues(projectId, sinceIssues, maxPages);

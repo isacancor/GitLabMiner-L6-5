@@ -44,12 +44,13 @@ public class GitLabController {
     @GetMapping("/{id}")
     public Project getProject(@Parameter(description = "id of the project to be searched") @PathVariable String id,
                               @Parameter(description = "number of past days to search for commits")
-                              @RequestParam(required=false) int sinceCommits,
+                              @RequestParam(required=false) Integer sinceCommits,
                               @Parameter(description = "number of past days to search for issues")
-                                  @RequestParam(required=false) int sinceIssues,
+                                  @RequestParam(required=false) Integer sinceIssues,
                               @Parameter(description = "max number of pages to search")
-                                  @RequestParam(required=false) int maxPages)
+                                  @RequestParam(required=false) Integer maxPages)
             throws ProjectNotFoundException {
+
         Project res = service.genProject(id, sinceCommits, sinceIssues,maxPages);
         return res;
     }
@@ -74,11 +75,11 @@ public class GitLabController {
     @PostMapping("/{id}")
     public Project sendProject(@Parameter(description = "id of the project to be searched") @PathVariable String id,
                                @Parameter(description = "number of past days to search for commits")
-                               @RequestParam(required=false) int sinceCommits,
+                               @RequestParam(required=false) Integer sinceCommits,
                                @Parameter(description = "number of past days to search for issues")
-                                   @RequestParam(required=false) int sinceIssues,
+                                   @RequestParam(required=false) Integer sinceIssues,
                                @Parameter(description = "max number of pages to search")
-                                   @RequestParam(required=false) int maxPages)
+                                   @RequestParam(required=false) Integer maxPages)
             throws ProjectNotFoundException {
         String uri = "http://localhost:8080/gitminer/projects";
         Project res = service.genProject(id, sinceCommits, sinceIssues,maxPages);
